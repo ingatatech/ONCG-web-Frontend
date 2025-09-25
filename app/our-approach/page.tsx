@@ -397,11 +397,7 @@ export default function OurApproachPage() {
               {/* Background Gradient on Hover */}
               <div className={`absolute inset-0 bg-gradient-to-br ${step.color} opacity-0 group-hover:opacity-10 rounded-3xl transition-opacity duration-500`}></div>
               
-              {/* Phase Number */}
-              <div className="absolute -top-4 -right-4 w-12 h-12 bg-gradient-to-br from-indigo-500 to-cyan-500 rounded-2xl flex items-center justify-center shadow-lg">
-                <span className="text-white font-bold text-lg">{index + 1}</span>
-              </div>
-
+     
               {/* Icon */}
               <motion.div 
                 className={`w-16 h-16 rounded-2xl bg-gradient-to-br ${step.color} p-4 mb-6 relative overflow-hidden shadow-lg`}
