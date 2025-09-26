@@ -12,7 +12,7 @@ const inter = Inter({
 export const metadata = {
   title: "ONCG Ltd - Professional Auditing & Consulting Services",
   description:
-    "ON Consulting Group Ltd provides expert auditing, advisory services, and consultancy solutions for businesses.",
+    "ONCG provides expert auditing, advisory services, and consultancy solutions for businesses.",
   generator: "v0.app",
 };
 

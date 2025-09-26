@@ -158,7 +158,7 @@ export default function Header() {
           <Link href="/" className="flex items-center pl-5">
             <Image
               src="/images/oncg-logo1.jpg"
-              alt="ONCG - ON Consulting Group Ltd"
+              alt="ONCG"
               width={200}
               height={80}
               className="h-12 w-auto"
@@ -166,10 +166,12 @@ export default function Header() {
           </Link>
           {/* Desktop Navigation */}
           <nav className="hidden lg:flex items-center space-x-8">
+            <Link href="/" className="text-foreground hover:text-primary transition-colors">
+              Home
+            </Link>
             <Link href="/our-approach" className="text-foreground hover:text-primary transition-colors">
               Our Approach
             </Link>
-
             <div className="relative group">
               <button
                 onClick={toggleServicesDropdown}
@@ -532,7 +534,7 @@ export default function Header() {
                    <Link href="/" className="flex items-center pl-5">
             <Image
               src="/images/oncg-logo1.jpg"
-              alt="ONCG - ON Consulting Group Ltd"
+              alt="ONCG"
               width={120} height={48} 
               className="h-12 w-auto"
             />
@@ -544,6 +546,13 @@ export default function Header() {
 
                 {/* Mobile Navigation */}
                 <nav className="space-y-2">
+                    <Link
+                    href="/"
+                    onClick={closeMobileMenu}
+                    className="block p-3 font-medium text-gray-900 hover:bg-gray-50 rounded-lg transition-colors"
+                  >
+                    Home
+                  </Link>
                   <Link
                     href="/our-approach"
                     onClick={closeMobileMenu}

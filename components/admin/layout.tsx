@@ -171,7 +171,7 @@ export default function AdminLayoutStructure({
               <div className="flex items-center">
                   <Image
                     src="/images/oncg-logo1.jpg"
-                    alt="ONCG - ON Consulting Group Ltd"
+                    alt="ONCG - "
                     width={200}
                     height={40}
                     className="h-8 w-auto"

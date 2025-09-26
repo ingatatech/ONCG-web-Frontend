@@ -146,7 +146,7 @@ export default function ONCGAdminLogin() {
                 transition={{ delay: 0.5 }}
                 className="text-white/80 text-sm"
               >
-                ON Consulting Group Ltd - Admin Access
+                ONCG - Admin Access
               </motion.p>
             </div>
 

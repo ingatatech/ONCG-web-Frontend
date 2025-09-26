@@ -65,7 +65,6 @@ export default function HomePage() {
   const testimonialsRef = useRef(null)
   const partnersRef = useRef(null)
   
-  const heroInView = useInView(heroRef, { once: true })
   const whyUsInView = useInView(whyUsRef, { once: true, margin: "-100px" })
   const testimonialsInView = useInView(testimonialsRef, { once: true, margin: "-100px" })
   const partnersInView = useInView(partnersRef, { once: true, margin: "-100px" })
@@ -160,9 +159,9 @@ export default function HomePage() {
           <div className="relative container mx-auto  z-10">
             <motion.div 
               className="text-center max-w-6xl mx-auto"
-              initial="initial"
-              animate={heroInView ? "animate" : "initial"}
-              variants={staggerContainer}
+                 initial={{ opacity: 0, y: 40 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ duration: 1 }}
             >
               <motion.div 
                 variants={fadeInUp}
@@ -213,7 +212,7 @@ export default function HomePage() {
                 variants={fadeInUp}
                 className="text-xl md:text-2xl text-gray-300 mb-12 text-pretty  max-w-6xl mx-auto leading-relaxed"
               >
-                ON Consulting Group Ltd delivers expert auditing, advisory services, and strategic consultancy to help your
+                ONCG delivers expert auditing, advisory services, and strategic consultancy to help your
                 business achieve compliance, efficiency, and sustainable growth in today's competitive landscape.
               </motion.p>
               

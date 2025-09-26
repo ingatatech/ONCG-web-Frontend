@@ -1,6 +1,6 @@
 import Image from "next/image"
 import Link from "next/link"
-import { Linkedin, Twitter, Facebook, Mail, Phone, MapPin } from "lucide-react"
+import { Linkedin, Twitter, Facebook, Mail, Phone } from "lucide-react"
 
 export default function Footer() {
   return (
@@ -12,14 +12,14 @@ export default function Footer() {
             <Link href="/" className="flex items-center mb-6">
               <Image
                 src="/images/oncg-logo1.jpg"
-                alt="ONCG - ON Consulting Group Ltd"
+                alt="ONCG"
                 width={200}
                 height={80}
                 className="h-12 w-auto"
               />
             </Link>
             <p className="text-primary-foreground/80 mb-6 text-pretty leading-relaxed">
-              ON Consulting Group Ltd delivers expert auditing, advisory services, and strategic consultancy to help
+              ONCG delivers expert auditing, advisory services, and strategic consultancy to help
               businesses achieve compliance, efficiency, and sustainable growth.
             </p>
             
@@ -71,10 +71,7 @@ export default function Footer() {
                  +(250) 780 066 190
                 </a>
               </div>
-              <div className="flex items-start space-x-3 text-sm text-primary-foreground/80">
-                <MapPin className="h-4 w-4 mt-0.5" />
-                <span>Kigali, Rwanda</span>
-              </div>
+             
             </div>
         </div>
 
@@ -82,7 +79,7 @@ export default function Footer() {
         <div className="flex flex-col md:flex-row justify-between items-center pt-2 border-t border-primary-foreground/20">
           <div className="flex flex-col md:flex-row items-center space-y-4 md:space-y-0 md:space-x-6 mb-4 md:mb-0">
             <div className="text-sm text-primary-foreground/80">
-              © {new Date().getFullYear()} ON Consulting Group Ltd. All rights reserved.
+              © {new Date().getFullYear()} ONCG. All rights reserved.
             </div>
           </div>
           

@@ -184,7 +184,6 @@ export default function OurApproachPage() {
   const differentiatorRef = useRef(null)
 //   const ctaRef = useRef(null)
   
-  const heroInView = useInView(heroRef, { once: true })
   const approachInView = useInView(approachRef, { once: true, margin: "-100px" })
   const valuesInView = useInView(valuesRef, { once: true, margin: "-100px" })
   const methodologyInView = useInView(methodologyRef, { once: true, margin: "-100px" })
@@ -194,7 +193,7 @@ export default function OurApproachPage() {
   return (
     <div className="min-h-screen">
       {/* Hero Section */}
-      <section ref={heroRef} className="relative py-10 flex items-center overflow-hidden bg-gradient-to-br from-slate-900 via-blue-900 to-slate-800">
+      <section ref={heroRef} className="relative py-5 flex items-center overflow-hidden bg-gradient-to-br from-slate-900 via-blue-900 to-slate-800">
         {/* Animated Background Elements */}
         <motion.div 
           style={{ y }}
@@ -228,12 +227,12 @@ export default function OurApproachPage() {
           ))}
         </div>
 
-        <div className="relative container mx-auto px-4 py-4 z-10">
+        <div className="relative container mx-auto px-4 py-1 z-10">
           <motion.div 
             className=" text-left max-w-6xl mx-auto"
-            initial="initial"
-            animate={heroInView ? "animate" : "initial"}
-            variants={staggerContainer}
+              initial={{ opacity: 0, y: 40 }}
+            animate={{ opacity: 1, y: 0 }}
+             transition={{ duration: 1 }}
           >
             <motion.div 
               variants={fadeInUp}
@@ -246,7 +245,7 @@ export default function OurApproachPage() {
             
             <motion.h1 
               variants={fadeInUp}
-              className="text-4xl md:text-5xl lg:text-5xl font-bold text-white mb-8 text-balance leading-tight"
+              className="text-4xl font-bold text-white mb-8 text-balance leading-tight"
             >
               Our Strategic{" "}
               <motion.span 
@@ -266,10 +265,10 @@ export default function OurApproachPage() {
             
             <motion.p 
               variants={fadeInUp}
-              className="text-xl md:text-2xl text-gray-300 mb-12 text-pretty max-w-6xl mx-auto leading-relaxed"
+              className="text-xl  text-gray-300 mb-12 text-pretty max-w-6xl mx-auto leading-relaxed"
             >
-              We believe in a systematic, client-centric approach that combines industry expertise with 
-              innovative methodologies to deliver measurable results and sustainable value.
+We believe in a systematic, client-centric approach that combines industry expertise with innovative methodologies to deliver measurable results and sustainable value. 
+At ONCG, we leverage professional knowledge, industry experience and latest technologies to understanding industry trends and design data driven solutions to business problems and assist our clients to build their competitive and sustainable capabilities. processes take opportunities
             </motion.p>
             
              {/* CTA Buttons */}

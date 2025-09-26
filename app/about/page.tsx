@@ -145,7 +145,7 @@ export default function AboutPage() {
         animate={{ opacity: 1 }}
         transition={{ delay: 0.5, duration: 1 }}
       >
- ON Consulting Group Ltd “ONCG LTD” is a business consulting firm registered and domiciled in the Republic of Rwanda with principal activities that are divided into four divisions including Research & Consulting Division, Business & Corporate Advisory, Accounting & Tax Advisory, and Audit & Assurance Services. ONCG Ltd is whole-owned subsidiary of ONCG Global Holdings Ltd, a multidisciplinary consulting group operating across African Continent.
+ ON Consulting Group Ltd “ONCG” is a business consulting firm registered and domiciled in the Republic of Rwanda with principal activities that are divided into four divisions including Research & Consulting Division, Business & Corporate Advisory, Accounting & Tax Advisory, and Audit & Assurance Services. ONCG Ltd is whole-owned subsidiary of ONCG Global Holdings Ltd, a multidisciplinary consulting group operating across African Continent.
       </motion.p>
 
       {/* CTA */}
