@@ -36,11 +36,7 @@ export default function InsightModal({ insight, isOpen, onClose }: InsightModalP
       icon: <MessageCircle className="h-4 w-4 text-green-600" />,
       link: `https://wa.me/?text=${encodeURIComponent(insight.title + " " + shareUrl)}`,
     },
-    {
-      label: "WhatsApp Status",
-      icon: <MessageCircle className="h-4 w-4 text-green-500" />,
-      link: `https://api.whatsapp.com/send?text=${encodeURIComponent(insight.title + " " + shareUrl)}`,
-    },
+  
     {
       label: "Email",
       icon: <Mail className="h-4 w-4 text-red-500" />,
