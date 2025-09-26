@@ -633,7 +633,7 @@ export default function HomePage() {
 
 
             {/* Professional Affiliations */}
-            <div className="border-t border-white/20 pt-16">
+            <div className="border-t border-white/20 pt-4">
               <motion.div 
                 className="text-center mb-12"
                 initial={{ opacity: 0, y: 30 }}

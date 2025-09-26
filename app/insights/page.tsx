@@ -456,7 +456,11 @@ export default function InsightsPage() {
                     <div className="p-6">
                       <div className="flex items-center space-x-2 text-xs text-gray-500 mb-3">
                         <Calendar className="h-4 w-4" />
-                        <span>{new Date(insight.createdAt).toLocaleDateString()}</span>
+                        <span> {new Date(insight.createdAt).toLocaleDateString("en-US", {
+                        year: "numeric",
+                        month: "long",
+                        day: "numeric",
+                      })}</span>
                       </div>
 
                       <h3 className="text-lg font-bold text-gray-900 mb-3 hover:text-blue-600 transition-colors cursor-pointer">

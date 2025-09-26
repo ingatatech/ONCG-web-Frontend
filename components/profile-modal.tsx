@@ -1,7 +1,7 @@
 "use client"
 
 import { useState } from "react"
-import { X, User, Briefcase, GraduationCap, Trophy, Star, Clock, Linkedin, Mail, Phone, Medal } from "lucide-react"
+import { X, User, Briefcase, GraduationCap, Trophy, Star, Clock, Medal } from "lucide-react"
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
 
 interface ProfileModalProps {
@@ -15,9 +15,9 @@ export function ProfileModal({ isOpen, onClose, selectedLeader }: ProfileModalPr
 
   if (!isOpen || !selectedLeader) return null
 
-  const linkedin = selectedLeader.linkedinUrl || ""
-  const email = selectedLeader.email || ""
-  const phone = selectedLeader.phone || ""
+  // const linkedin = selectedLeader.linkedinUrl || ""
+  // const email = selectedLeader.email || ""
+  // const phone = selectedLeader.phone || ""
 
   return (
     <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-2 sm:p-4">
@@ -50,7 +50,7 @@ export function ProfileModal({ isOpen, onClose, selectedLeader }: ProfileModalPr
               </div>
               
               {/* Contact Info */}
-              {(linkedin || email || phone) && (
+              {/* {(linkedin || email || phone) && (
                 <div className="flex flex-wrap gap-2 justify-center sm:justify-start">
                   {linkedin && (
                     <a
@@ -83,7 +83,7 @@ export function ProfileModal({ isOpen, onClose, selectedLeader }: ProfileModalPr
                     </a>
                   )}
                 </div>
-              )}
+              )} */}
             </div>
           </div>
         </div>
