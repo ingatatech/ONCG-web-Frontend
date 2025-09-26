@@ -82,8 +82,7 @@ export default function Header() {
         const categories = categoriesResponse.data || categoriesResponse
         const services = servicesResponse.data || servicesResponse
         const industries = industriesResponse.industries || industriesResponse
-        console.log("industries",industries)
-        console.log("industriesResponse",industriesResponse)
+
         // Group services by category
         const groupedServices = categories.map((category: any) => ({
           ...category,
