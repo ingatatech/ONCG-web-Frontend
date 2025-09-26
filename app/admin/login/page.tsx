@@ -125,7 +125,7 @@ export default function ONCGAdminLogin() {
                 className="inline-flex items-center justify-center w-16 h-16 bg-white/20 backdrop-blur-sm rounded-2xl mb-4"
               >
                 <Image
-                  src="/images/oncg-logo.png"
+                  src="/images/oncg-logo1.jpg"
                   alt="ONCG Logo"
                   width={48}
                   height={48}
