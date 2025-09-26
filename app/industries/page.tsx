@@ -356,7 +356,7 @@ function IndustriesPageContent() {
                       </div>
                       
                       {/* Main Content */}
-                      <div className="relative z-10 p-8 h-full">
+                      <div className="relative z-10 p-1 h-full">
                         <CardContent className="pt-0 h-full flex flex-col">
                           {/* Header Section */}
                           <div className="flex items-start justify-between mb-8">
@@ -399,7 +399,7 @@ function IndustriesPageContent() {
                               
                               <div className="relative">
                                 <h4 className="font-bold text-blue-900 mb-4 flex items-center text-lg">
-                                  <div className="w-2 h-2 rounded-full mr-3 animate-pulse" />
+                                  <div className="w-2 h-2 rounded-full animate-pulse" />
                                   Solution Overview
                                 </h4>
                                 <div className=" leading-relaxed">

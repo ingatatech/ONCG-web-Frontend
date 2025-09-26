@@ -25,7 +25,7 @@ export default function InsightModal({ insight, isOpen, onClose }: InsightModalP
 
   if (!insight) return null
 
-  // Generate the shareable URL (you'll need to adapt this to your actual URL structure)
+  // Generate the shareable URL
   const shareUrl = typeof window !== 'undefined' 
     ? `${window.location.origin}/insights/${insight.id}` 
     : `https://yourwebsite.com/insights/${insight.id}`
@@ -36,70 +36,72 @@ export default function InsightModal({ insight, isOpen, onClose }: InsightModalP
   // Strip HTML from content for sharing
   const plainTextContent = insight.content.replace(/<[^>]*>/g, '').substring(0, 100) + '...'
 
-  // Debug function to log sharing attempts
-  const debugShare = (platform: string, url: string) => {
-    console.log(`Attempting to share on ${platform}:`, url)
-  }
-
   const handleCopyLink = async () => {
     try {
+      console.log('Attempting to copy:', shareUrl)
+      
       if (navigator.clipboard && window.isSecureContext) {
         await navigator.clipboard.writeText(shareUrl)
         setCopySuccess(true)
         setTimeout(() => setCopySuccess(false), 2000)
+        return
+      }
+      
+      // Fallback method
+      const textArea = document.createElement('textarea')
+      textArea.value = shareUrl
+      textArea.style.position = 'fixed'
+      textArea.style.left = '-999999px'
+      textArea.style.top = '-999999px'
+      document.body.appendChild(textArea)
+      textArea.focus()
+      textArea.select()
+      
+      const successful = document.execCommand('copy')
+      document.body.removeChild(textArea)
+      
+      if (successful) {
+        setCopySuccess(true)
+        setTimeout(() => setCopySuccess(false), 2000)
       } else {
-        // Fallback for older browsers or non-secure contexts
-        const textArea = document.createElement('textarea')
-        textArea.value = shareUrl
-        textArea.style.position = 'absolute'
-        textArea.style.left = '-9999px'
-        document.body.appendChild(textArea)
-        textArea.select()
-        document.execCommand('copy')
-        document.body.removeChild(textArea)
+        throw new Error('execCommand failed')
+      }
+    } catch (err) {
+      console.error('Copy failed:', err)
+      
+      // Final fallback
+      const userCopied = window.prompt('Please copy this link:', shareUrl)
+      if (userCopied !== null) {
         setCopySuccess(true)
         setTimeout(() => setCopySuccess(false), 2000)
       }
-    } catch (err) {
-      console.error('Failed to copy link:', err)
-      // Final fallback - show the URL to user
-      prompt('Copy this link:', shareUrl)
     }
   }
 
   const handleWhatsAppShare = () => {
-    const text = encodeURIComponent(`${shareText}\n\n${plainTextContent}\n\n${shareUrl}`)
-    const whatsappUrl = `https://wa.me/?text=${text}`
-    debugShare('WhatsApp', whatsappUrl)
-    
-    // Try to open WhatsApp, with fallback
     try {
-      window.open(whatsappUrl, '_blank', 'noopener,noreferrer')
+      const message = `${shareText}\n\n${plainTextContent}\n\n${shareUrl}`
+      const encodedMessage = encodeURIComponent(message)
+      const whatsappUrl = `https://wa.me/?text=${encodedMessage}`
+      
+      console.log('WhatsApp URL:', whatsappUrl)
+      
+      const newWindow = window.open(whatsappUrl, '_blank', 'noopener,noreferrer')
+      
+      if (newWindow) {
+        // Check if window was blocked
+        setTimeout(() => {
+          if (newWindow.closed) {
+            console.log('WhatsApp window was closed or blocked')
+          }
+        }, 1000)
+      } else {
+        console.log('Window.open failed, trying location.href')
+        window.location.href = whatsappUrl
+      }
     } catch (err) {
-      console.error('Failed to open WhatsApp:', err)
-      window.location.href = whatsappUrl
+      console.error('WhatsApp share failed:', err)
     }
-  }
-
-  const handleWhatsAppStatusShare = () => {
-    const text = encodeURIComponent(`${shareText}\n${shareUrl}`)
-    // First try the app protocol, then fallback to web
-    const appUrl = `whatsapp://send?text=${text}`
-    const webUrl = `https://wa.me/?text=${text}`
-    
-    debugShare('WhatsApp Status', appUrl)
-    
-    // Try app first
-    const iframe = document.createElement('iframe')
-    iframe.style.display = 'none'
-    iframe.src = appUrl
-    document.body.appendChild(iframe)
-    
-    // Fallback to web after short delay
-    setTimeout(() => {
-      document.body.removeChild(iframe)
-      window.open(webUrl, '_blank', 'noopener,noreferrer')
-    }, 1000)
   }
 
   const handleEmailShare = () => {
@@ -107,14 +109,11 @@ export default function InsightModal({ insight, isOpen, onClose }: InsightModalP
     const body = encodeURIComponent(`${shareText}\n\n${plainTextContent}\n\nRead more: ${shareUrl}`)
     const emailUrl = `mailto:?subject=${subject}&body=${body}`
     
-    debugShare('Email', emailUrl)
-    
     try {
       window.location.href = emailUrl
     } catch (err) {
       console.error('Failed to open email client:', err)
-      // Fallback - copy email content
-      // const emailContent = `Subject: ${shareTitle}\n\n${shareText}\n\n${plainTextContent}\n\nRead more: ${shareUrl}`
+      // Fallback - copy link instead
       handleCopyLink()
       alert('Email client not available. Link copied to clipboard instead.')
     }
@@ -122,12 +121,14 @@ export default function InsightModal({ insight, isOpen, onClose }: InsightModalP
 
   const handleTelegramShare = () => {
     const text = encodeURIComponent(`${shareText}\n\n${plainTextContent}`)
-    const telegramUrl = `https://t.me/share/url?url=${encodeURIComponent(shareUrl)}&text=${text}`
-    
-    debugShare('Telegram', telegramUrl)
+    const url = encodeURIComponent(shareUrl)
+    const telegramUrl = `https://t.me/share/url?url=${url}&text=${text}`
     
     try {
-      window.open(telegramUrl, '_blank', 'noopener,noreferrer')
+      const newWindow = window.open(telegramUrl, '_blank', 'noopener,noreferrer')
+      if (!newWindow) {
+        window.location.href = telegramUrl
+      }
     } catch (err) {
       console.error('Failed to open Telegram:', err)
       window.location.href = telegramUrl
@@ -136,50 +137,39 @@ export default function InsightModal({ insight, isOpen, onClose }: InsightModalP
 
   const handleTwitterShare = () => {
     const text = encodeURIComponent(`${shareText}`)
-    const twitterUrl = `https://twitter.com/intent/tweet?text=${text}&url=${encodeURIComponent(shareUrl)}`
-    
-    debugShare('Twitter/X', twitterUrl)
+    const url = encodeURIComponent(shareUrl)
+    const twitterUrl = `https://twitter.com/intent/tweet?text=${text}&url=${url}`
     
     try {
-      window.open(twitterUrl, '_blank', 'noopener,noreferrer,width=550,height=420')
+      const newWindow = window.open(twitterUrl, '_blank', 'noopener,noreferrer,width=550,height=420')
+      if (!newWindow) {
+        window.location.href = twitterUrl
+      }
     } catch (err) {
       console.error('Failed to open Twitter:', err)
       window.location.href = twitterUrl
     }
   }
 
-  const handleDiscordShare = () => {
-    // Discord doesn't have a direct web share URL, so we'll copy a formatted message
+  const handleDiscordShare = async () => {
     const discordText = `**${shareTitle}**\n\n${plainTextContent}\n\n${shareUrl}`
     
-    debugShare('Discord', 'Copy to clipboard')
-    
-    if (navigator.clipboard && window.isSecureContext) {
-      navigator.clipboard.writeText(discordText).then(() => {
+    try {
+      if (navigator.clipboard && window.isSecureContext) {
+        await navigator.clipboard.writeText(discordText)
         alert('Discord message copied to clipboard! Paste it in your Discord chat.')
-      }).catch(() => {
-        prompt('Copy this message for Discord:', discordText)
-      })
-    } else {
-      // Fallback
+      } else {
+        // Fallback
+        const userInput = prompt('Copy this message for Discord:', discordText)
+        if (userInput !== null) {
+          alert('Message ready to paste in Discord!')
+        }
+      }
+    } catch (err) {
+      console.error('Failed to copy Discord message:', err)
       prompt('Copy this message for Discord:', discordText)
     }
   }
-
-  // Native Web Share API fallback
-  // const handleNativeShare = async () => {
-  //   if (navigator.share) {
-  //     try {
-  //       await navigator.share({
-  //         title: shareTitle,
-  //         text: shareText,
-  //         url: shareUrl,
-  //       })
-  //     } catch (err) {
-  //       console.error('Native share failed:', err)
-  //     }
-  //   }
-  // }
 
   const shareOptions = [
     {
@@ -194,13 +184,6 @@ export default function InsightModal({ insight, isOpen, onClose }: InsightModalP
       icon: MessageCircle,
       action: handleWhatsAppShare,
       color: 'text-green-600 hover:text-green-800',
-      bgColor: 'hover:bg-green-50'
-    },
-    {
-      name: 'WhatsApp Status',
-      icon: MessageCircle,
-      action: handleWhatsAppStatusShare,
-      color: 'text-green-500 hover:text-green-700',
       bgColor: 'hover:bg-green-50'
     },
     {
@@ -236,129 +219,131 @@ export default function InsightModal({ insight, isOpen, onClose }: InsightModalP
   return (
     <AnimatePresence>
       {isOpen && (
-        <div className="fixed inset-0 z-50 overflow-y-auto">
-          {/* Backdrop */}
-          <motion.div
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            exit={{ opacity: 0 }}
-            className="fixed inset-0 bg-black/50 backdrop-blur-sm"
-            onClick={onClose}
-          />
-
-          {/* Modal */}
-          <div className="flex min-h-full items-center justify-center p-4">
+        <>
+          <div className="fixed inset-0 z-50 overflow-y-auto">
+            {/* Backdrop */}
             <motion.div
-              initial={{ opacity: 0, scale: 0.95, y: 20 }}
-              animate={{ opacity: 1, scale: 1, y: 0 }}
-              exit={{ opacity: 0, scale: 0.95, y: 20 }}
-              className="relative w-full max-w-4xl bg-white rounded-2xl shadow-2xl overflow-hidden"
-              onClick={(e) => e.stopPropagation()}
-            >
-              {/* Header Image */}
-              <div className="relative h-64 md:h-80">
-                <Image src={insight.image || "/placeholder.svg"} alt={insight.title} fill className="object-cover" />
-                <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent" />
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              exit={{ opacity: 0 }}
+              className="fixed inset-0 bg-black/50 backdrop-blur-sm"
+              onClick={onClose}
+            />
 
-                {/* Close Button */}
-                <button
-                  onClick={onClose}
-                  className="absolute top-4 right-4 bg-white/90 hover:bg-white p-2 rounded-full transition-colors"
-                >
-                  <X className="h-5 w-5 text-gray-700" />
-                </button>
-                {/* Category Badge */}
-                <div className="absolute bottom-4 left-4">
-                  <span className="px-3 py-1 rounded-full text-sm font-medium bg-green-100 text-green-800">
-                    {(insight?.industry?.name ?? insight?.industry ?? "").toString()}
-                  </span>
-                </div>
-              </div>
+            {/* Modal */}
+            <div className="flex min-h-full items-center justify-center p-4">
+              <motion.div
+                initial={{ opacity: 0, scale: 0.95, y: 20 }}
+                animate={{ opacity: 1, scale: 1, y: 0 }}
+                exit={{ opacity: 0, scale: 0.95, y: 20 }}
+                className="relative w-full max-w-4xl bg-white rounded-2xl shadow-2xl overflow-hidden"
+                onClick={(e) => e.stopPropagation()}
+              >
+                {/* Header Image */}
+                <div className="relative h-64 md:h-80">
+                  <Image src={insight.image || "/placeholder.svg"} alt={insight.title} fill className="object-cover" />
+                  <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent" />
 
-              {/* Content */}
-              <div className="p-6 md:p-8">
-                {/* Meta Info */}
-                <div className="flex items-center space-x-4 text-sm text-gray-500 mb-4">
-                  <div className="flex items-center space-x-1">
-                    <Calendar className="h-4 w-4" />
-                    <span>
-                      {new Date(insight.createdAt).toLocaleDateString("en-US", {
-                        year: "numeric",
-                        month: "long",
-                        day: "numeric",
-                      })}
+                  {/* Close Button */}
+                  <button
+                    onClick={onClose}
+                    className="absolute top-4 right-4 bg-white/90 hover:bg-white p-2 rounded-full transition-colors"
+                  >
+                    <X className="h-5 w-5 text-gray-700" />
+                  </button>
+                  {/* Category Badge */}
+                  <div className="absolute bottom-4 left-4">
+                    <span className="px-3 py-1 rounded-full text-sm font-medium bg-green-100 text-green-800">
+                      {(insight?.industry?.name ?? insight?.industry ?? "").toString()}
                     </span>
                   </div>
                 </div>
 
-                {/* Title */}
-                <h1 className="text-2xl md:text-3xl font-bold text-gray-900 mb-4 leading-tight">{insight.title}</h1>
-
                 {/* Content */}
-                <div className="prose prose-lg max-w-none">
-                  <p className="text-gray-700 leading-relaxed" dangerouslySetInnerHTML={{ __html: insight.content}} />
-                </div>
+                <div className="p-6 md:p-8">
+                  {/* Meta Info */}
+                  <div className="flex items-center space-x-4 text-sm text-gray-500 mb-4">
+                    <div className="flex items-center space-x-1">
+                      <Calendar className="h-4 w-4" />
+                      <span>
+                        {new Date(insight.createdAt).toLocaleDateString("en-US", {
+                          year: "numeric",
+                          month: "long",
+                          day: "numeric",
+                        })}
+                      </span>
+                    </div>
+                  </div>
 
-                {/* Action Buttons */}
-                <div className="flex flex-col sm:flex-row gap-3 mt-8 pt-6 border-t border-gray-200">
-                  <div className="relative">
-                    <button 
-                      onClick={() => setShowShareMenu(!showShareMenu)}
-                      className="flex items-center justify-center space-x-2 border border-gray-300 text-gray-700 px-6 py-3 rounded-lg font-medium hover:bg-gray-50 transition-colors"
-                    >
-                      <Share2 className="h-4 w-4" />
-                      <span>Share Insight</span>
-                    </button>
+                  {/* Title */}
+                  <h1 className="text-2xl md:text-3xl font-bold text-gray-900 mb-4 leading-tight">{insight.title}</h1>
 
-                    {/* Share Menu */}
-                    <AnimatePresence>
-                      {showShareMenu && (
-                        <motion.div
-                          initial={{ opacity: 0, scale: 0.95, y: -10 }}
-                          animate={{ opacity: 1, scale: 1, y: 0 }}
-                          exit={{ opacity: 0, scale: 0.95, y: -10 }}
-                          className="absolute bottom-full mb-2 left-0 bg-white rounded-xl shadow-2xl border border-gray-200 p-2 min-w-[200px] z-60"
-                        >
-                          <div className="grid gap-1">
-                            {shareOptions.map((option) => (
-                              <button
-                                key={option.name}
-                                onClick={() => {
-                                  option.action()
-                                  setShowShareMenu(false)
-                                }}
-                                className={`flex items-center space-x-3 px-4 py-3 rounded-lg transition-colors ${option.color} ${option.bgColor}`}
-                              >
-                                <option.icon className="h-4 w-4" />
-                                <span className="text-sm font-medium">
-                                  {option.name === 'Copy Link' && copySuccess ? 'Copied!' : option.name}
-                                </span>
-                              </button>
-                            ))}
-                          </div>
-                          
-                          {/* Arrow */}
-                          <div className="absolute top-full left-6 transform -translate-x-1/2">
-                            <div className="border-8 border-transparent border-t-white"></div>
-                            <div className="absolute top-0 left-1/2 transform -translate-x-1/2 -translate-y-1 border-8 border-transparent border-t-gray-200"></div>
-                          </div>
-                        </motion.div>
-                      )}
-                    </AnimatePresence>
+                  {/* Content */}
+                  <div className="prose prose-lg max-w-none">
+                    <p className="text-gray-700 leading-relaxed" dangerouslySetInnerHTML={{ __html: insight.content}} />
+                  </div>
+
+                  {/* Action Buttons */}
+                  <div className="flex flex-col sm:flex-row gap-3 mt-8 pt-6 border-t border-gray-200">
+                    <div className="relative">
+                      <button 
+                        onClick={() => setShowShareMenu(!showShareMenu)}
+                        className="flex items-center justify-center space-x-2 border border-gray-300 text-gray-700 px-6 py-3 rounded-lg font-medium hover:bg-gray-50 transition-colors"
+                      >
+                        <Share2 className="h-4 w-4" />
+                        <span>Share Insight</span>
+                      </button>
+
+                      {/* Share Menu */}
+                      <AnimatePresence>
+                        {showShareMenu && (
+                          <motion.div
+                            initial={{ opacity: 0, scale: 0.95, y: 10 }}
+                            animate={{ opacity: 1, scale: 1, y: 0 }}
+                            exit={{ opacity: 0, scale: 0.95, y: 10 }}
+                            className="absolute top-full mt-2 left-0 bg-white rounded-xl shadow-2xl border border-gray-200 p-2 min-w-[200px] z-[70]"
+                          >
+                            <div className="grid gap-1">
+                              {shareOptions.map((option) => (
+                                <button
+                                  key={option.name}
+                                  onClick={() => {
+                                    option.action()
+                                    setShowShareMenu(false)
+                                  }}
+                                  className={`flex items-center space-x-3 px-4 py-3 rounded-lg transition-colors ${option.color} ${option.bgColor}`}
+                                >
+                                  <option.icon className="h-4 w-4" />
+                                  <span className="text-sm font-medium">
+                                    {option.name === 'Copy Link' && copySuccess ? 'Copied!' : option.name}
+                                  </span>
+                                </button>
+                              ))}
+                            </div>
+                            
+                            {/* Arrow pointing up */}
+                            <div className="absolute bottom-full left-6 transform -translate-x-1/2">
+                              <div className="border-8 border-transparent border-b-white"></div>
+                              <div className="absolute bottom-0 left-1/2 transform -translate-x-1/2 translate-y-1 border-8 border-transparent border-b-gray-200"></div>
+                            </div>
+                          </motion.div>
+                        )}
+                      </AnimatePresence>
+                    </div>
                   </div>
                 </div>
-              </div>
-            </motion.div>
+              </motion.div>
+            </div>
           </div>
 
           {/* Click outside to close share menu */}
           {showShareMenu && (
             <div
-              className="fixed inset-0 z-40"
+              className="fixed inset-0 z-[60]"
               onClick={() => setShowShareMenu(false)}
             />
           )}
-        </div>
+        </>
       )}
     </AnimatePresence>
   )
