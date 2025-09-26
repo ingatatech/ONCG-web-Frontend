@@ -493,6 +493,9 @@ export default function Header() {
             <Link href="/contact-us" className="text-foreground hover:text-primary transition-colors">
               Contact Us
             </Link>
+              <Link href="/admin/login" className="text-foreground hover:text-primary transition-colors">
+              Sign In
+            </Link>
           </nav>
           {/* Desktop CTA and Mobile Menu Button */}
           <div className="flex items-center space-x-4">
@@ -778,6 +781,14 @@ export default function Header() {
                     className="block p-3 font-medium text-gray-900 hover:bg-gray-50 rounded-lg transition-colors"
                   >
                     Contact Us
+                  </Link>
+                  
+                  <Link
+                    href="/admin/login"
+                    onClick={closeMobileMenu}
+                    className="block p-3 font-medium text-gray-900 hover:bg-gray-50 rounded-lg transition-colors"
+                  >
+                    Sign In
                   </Link>
                 </nav>
               </div>

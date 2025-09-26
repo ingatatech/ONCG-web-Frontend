@@ -3,7 +3,7 @@ import { useState } from "react"
 import type React from "react"
 
 import { motion, AnimatePresence } from "framer-motion"
-import { Eye, EyeOff, Lock, Mail, ArrowRight, Loader, Building2 } from "lucide-react"
+import { Eye, EyeOff, Lock, Mail, ArrowRight, Loader, Building2, ArrowLeft } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { login } from "@/lib/api"
@@ -68,6 +68,24 @@ export default function ONCGAdminLogin() {
   return (
     <>
       <div className="min-h-screen bg-gradient-to-br from-primary via-primary/30 to-primary/80 flex items-center justify-center p-2 relative overflow-hidden">
+        {/* Back to Home Button - Fixed Position */}
+        <motion.div
+          initial={{ opacity: 0, x: -50 }}
+          animate={{ opacity: 1, x: 0 }}
+          transition={{ delay: 0.2 }}
+          className="absolute top-6 left-6 z-20"
+        >
+          <Link href="/">
+            <Button
+              variant="ghost"
+              className="bg-white/20 backdrop-blur-sm hover:bg-white/30 text-white border border-white/30 hover:border-white/50  hover:text-white transition-all duration-300 rounded-xl px-4 py-2"
+            >
+              <ArrowLeft className="w-4 h-4 mr-2" />
+              Back to Home
+            </Button>
+          </Link>
+        </motion.div>
+
         {/* Animated Background Elements */}
         <div className="absolute inset-0">
           <motion.div
@@ -117,7 +135,7 @@ export default function ONCGAdminLogin() {
         >
           <div className="bg-white/95 backdrop-blur-xl rounded-3xl shadow-2xl border border-white/20 overflow-hidden">
             {/* Header */}
-            <div className="bg-gradient-to-r from-primary to-primary/90 p-3 text-center">
+            <div className="bg-gradient-to-r from-primary to-primary/90 p-3 text-center relative">
               <motion.div
                 initial={{ scale: 0 }}
                 animate={{ scale: 1 }}
