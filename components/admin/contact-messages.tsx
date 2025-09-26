@@ -375,10 +375,18 @@ export default function AdminContactMessages() {
                     <label className="block text-sm font-medium text-gray-700 mb-1">Name</label>
                     <p className="text-gray-900 font-semibold">{selectedMessage.name}</p>
                   </div>
-                  <div>
-                    <label className="block text-sm font-medium text-gray-700 mb-1">Email</label>
-                    <p className="text-gray-900">{selectedMessage.email}</p>
-                  </div>
+                <div>
+  <label className="block text-sm font-medium text-gray-700 mb-1">Email</label>
+  <p className="text-gray-900">
+    <a
+      href={`mailto:${selectedMessage.email}`}
+      className="text-blue-600 hover:underline"
+    >
+      {selectedMessage.email}
+    </a>
+  </p>
+</div>
+
                   <div>
                     <label className="block text-sm font-medium text-gray-700 mb-1">Company</label>
                     <p className="text-gray-900">{selectedMessage.company}</p>
